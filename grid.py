@@ -168,8 +168,8 @@ class Grid:
                 self.found_bombs -= 1
             self.state[x][y] = (self.state[x][y] + 1) % 3
 
-    def game_over(self):
+    '''def game_over(self):
         return self.found_bombs == self.GRID_BOMBS and \
                self.found_cells == self.GRID_HEIGHT * self.GRID_WIDTH - self.GRID_BOMBS
 
-
+    '''

@@ -5,12 +5,14 @@ import pygame
 
 class Button:
 
-    def __init__(self, screen, message, x, y, width = 240, height = 50):
+    def __init__(self, screen, message, x, y, width = 240, height = 50, button_color = Colors.GREEN):
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
+        self.initial_button_color = button_color
+
         self.width, self.height = width, height
-        self.button_color = Colors.GREEN
+        self.button_color = button_color
         self.text_color = Colors.WHITE
         self.font = pygame.font.SysFont(None, 48)
 
@@ -35,4 +37,4 @@ class Button:
         if self.rect.collidepoint(mouse_x, mouse_y):
             self.button_color = Colors.LIGHT_GREY
         else:
-            self.button_color = Colors.GREEN
+            self.button_color = self.initial_button_color
