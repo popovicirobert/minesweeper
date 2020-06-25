@@ -216,7 +216,7 @@ class MineSweeper:
 
         seconds = elapsed_time % 60
         hours = elapsed_time // 3600
-        minutes = elapsed_time - hours * 3600 - seconds
+        minutes = (elapsed_time - hours * 3600 - seconds) // 60
 
         self.time_button.prep_message(f'{hours:02}:{minutes:02}:{seconds:02}')
 
@@ -233,7 +233,7 @@ class MineSweeper:
                         x, y = self.get_mouse_cell()
                         if x != None and self.grid.state[x][y] != self.grid.NO_BOMB and self.bomb_hit == False:
                             if event.button == pygame.BUTTON_LEFT:
-                                self.bomb_hit = (self.grid.reveal(x, y, self.screen) == False)
+                                self.bomb_hit = (self.grid.reveal(x, y) == False)
                             elif event.button == pygame.BUTTON_RIGHT:
                                 self.grid.update_state(x, y)
                                 self.flags_button.prep_message(f'{self.grid.found_bombs} / {self.grid.GRID_BOMBS}')
@@ -281,7 +281,7 @@ class MineSweeper:
     def start(self):
 
         while True:
-            if self.game_active == True and self.bomb_hit == False:
+            if self.game_active == True and self.bomb_hit == False and self.grid.game_over() == False:
                 self.display_time()
 
             self.check_events()

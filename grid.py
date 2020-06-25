@@ -131,26 +131,36 @@ class Grid:
                 current_found_cells += 1
                 self.state[x][y] = 3
 
-                if x > 0 and self.visited[x - 1][y] == False and self.bomb[x - 1][y] == False:
+                if x > 0 and self.visited[x - 1][y] == False and self.bomb[x - 1][y] == False and\
+                        self.state[x - 1][y] != self.SURE_BOMB:
+
                     queue.append([x - 1, y])
                     self.visited[x - 1][y] = True
 
-                if y > 0 and self.visited[x][y - 1] == False and self.bomb[x][y - 1] == False:
+                if y > 0 and self.visited[x][y - 1] == False and self.bomb[x][y - 1] == False and\
+                        self.state[x][y - 1] != self.SURE_BOMB:
+
                     queue.append([x, y - 1])
                     self.visited[x][y - 1] = True
 
-                if x + 1 < self.GRID_WIDTH and self.visited[x + 1][y] == False and self.bomb[x + 1][y] == False:
+                if x + 1 < self.GRID_WIDTH and self.visited[x + 1][y] == False and\
+                        self.bomb[x + 1][y] == False and\
+                        self.state[x + 1][y] != self.SURE_BOMB:
+
                     queue.append([x + 1, y])
                     self.visited[x + 1][y] = True
 
-                if y + 1 < self.GRID_HEIGHT and self.visited[x][y + 1] == False and self.bomb[x][y + 1] == False:
+                if y + 1 < self.GRID_HEIGHT and self.visited[x][y + 1] == False and\
+                        self.bomb[x][y + 1] == False and\
+                        self.state[x][y + 1] != self.SURE_BOMB:
+
                     queue.append([x, y + 1])
                     self.visited[x][y + 1] = True
 
         self.found_cells += current_found_cells
 
 
-    def reveal(self, x, y, screen):
+    def reveal(self, x, y):
         if self.bomb[x][y] == True:
             self.color[x][y] = Colors.RED
             return False
@@ -168,8 +178,8 @@ class Grid:
                 self.found_bombs -= 1
             self.state[x][y] = (self.state[x][y] + 1) % 3
 
-    '''def game_over(self):
+    def game_over(self):
         return self.found_bombs == self.GRID_BOMBS and \
                self.found_cells == self.GRID_HEIGHT * self.GRID_WIDTH - self.GRID_BOMBS
 
-    '''
+
