@@ -156,6 +156,8 @@ class MineSweeper:
                                                screen_rect.centerx,
                                                180)
 
+                self.menu_start_time = pygame.time.get_ticks()
+
 
 
     def check_menu_exit_button(self):
@@ -174,6 +176,7 @@ class MineSweeper:
         if self.menu_resume_button.rect.collidepoint(mouse_x, mouse_y) == True:
             self.screen.fill(Colors.GREY)
             self.menu_active = False
+            self.menu_spent_time += pygame.time.get_ticks() - self.menu_start_time
 
     def check_menu_restart_button(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -185,6 +188,9 @@ class MineSweeper:
             self.grid = Grid(self.grid.GRID_WIDTH, self.grid.GRID_HEIGHT,
                              self.grid.GRID_BOMBS, self.grid.CELL_SIZE)
             self.flags_button.prep_message(f'{self.grid.found_bombs} / {self.grid.GRID_BOMBS}')
+
+            self.start_time = pygame.time.get_ticks()
+            self.menu_spent_time = 0
 
 
     def color_cells(self):
@@ -206,7 +212,7 @@ class MineSweeper:
 
     def display_time(self):
         current_time = pygame.time.get_ticks()
-        elapsed_time = (current_time - self.start_time) // 1000
+        elapsed_time = (current_time - self.start_time - self.menu_spent_time) // 1000
 
         seconds = elapsed_time % 60
         hours = elapsed_time // 3600
@@ -223,7 +229,6 @@ class MineSweeper:
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.game_active == True:
-
                     if self.menu_active == False:
                         x, y = self.get_mouse_cell()
                         if x != None and self.grid.state[x][y] != self.grid.NO_BOMB and self.bomb_hit == False:
@@ -258,12 +263,15 @@ class MineSweeper:
 
                         self.flags_button = Button(self.screen, f'0 / {self.grid.GRID_BOMBS}',
                                                    (self.menu_button.rect.x + self.menu_button.width + X) // 2,
-                                                   Y - 75, width = 100, button_color = Colors.GREY)
+                                                   Y - 75, width = 100, button_color = Colors.GREY,
+												   highlight_color = Colors.GREY)
 
                         self.start_time = pygame.time.get_ticks()
+                        self.menu_spent_time = 0
                         self.time_button = Button(self.screen, '00:00:00',
                                                   self.menu_button.rect.x // 2,
-                                                  Y - 75, width = 150, button_color = Colors.GREY)
+                                                  Y - 75, width = 150, button_color = Colors.GREY,
+												  highlight_color = Colors.GREY)
 
 
         if self.game_active == True and self.bomb_hit == False:
@@ -273,8 +281,7 @@ class MineSweeper:
     def start(self):
 
         while True:
-
-            if self.game_active == True:
+            if self.game_active == True and self.bomb_hit == False:
                 self.display_time()
 
             self.check_events()
